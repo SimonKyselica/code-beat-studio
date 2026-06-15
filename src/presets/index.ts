@@ -1,4 +1,5 @@
 import { tutorial } from "./tutorial";
+import { lofi } from "./lofi";
 import { dreamcore } from "./dreamcore";
 import { cyberpunk } from "./cyberpunk";
 import { dreampunk } from "./dreampunk";
@@ -6,6 +7,7 @@ import { dreampunk } from "./dreampunk";
 /** DSL source for each named preset, used by the dropdown and preset() calls. */
 export const PRESETS: Record<string, string> = {
   tutorial,
+  lofi,
   dreamcore,
   cyberpunk,
   dreampunk,

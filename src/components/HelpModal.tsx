@@ -340,8 +340,9 @@ adsr(0.01, 0.2, 0.4, 0.2)  // snappy bass: instant, short`}</Code>
           {/* ---------- Presets & export ---------- */}
           <Heading>Presets, errors &amp; export</Heading>
           <P>
-            Learn by example: pick <K>dreampunk</K>, <K>dreamcore</K> or{" "}
-            <K>cyberpunk</K> from the <span className="text-neutral-200">Presets</span>{" "}
+            Learn by example: pick <K>lofi</K>, <K>dreampunk</K>,{" "}
+            <K>dreamcore</K> or <K>cyberpunk</K> from the{" "}
+            <span className="text-neutral-200">Presets</span>{" "}
             dropdown and read how they’re built. You can also drop a whole preset
             into your own code with <K>preset("dreampunk")</K>. Mistakes appear in
             the red console at the bottom with the exact line number. When you’re

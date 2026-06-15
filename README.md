@@ -61,9 +61,9 @@ track("drums") {
   `phaser(freq)`, `pan(value)`, `fadeIn(seconds)`, `fadeOut(seconds)`
 - **Sound shaping** — `adsr(attack, decay, sustain, release)`, `volume(0-1)`,
   `pitch(semitones)`
-- **Presets** — `preset("tutorial")`, `preset("dreamcore")`, `preset("cyberpunk")`,
-  `preset("dreampunk")` (also available from the toolbar **Presets** dropdown; the
-  **Docs** button next to it opens the in-app reference)
+- **Presets** — `preset("tutorial")`, `preset("lofi")`, `preset("dreamcore")`,
+  `preset("cyberpunk")`, `preset("dreampunk")` (also available from the toolbar
+  **Presets** dropdown; the **Docs** button next to it opens the in-app reference)
 
 Notes:
 
