@@ -14,6 +14,7 @@ export default function Toolbar() {
   const exportSong = useStudioStore((s) => s.exportSong);
   const isExporting = useStudioStore((s) => s.isExporting);
   const setHelpOpen = useStudioStore((s) => s.setHelpOpen);
+  const currentPreset = useStudioStore((s) => s.currentPreset);
 
   return (
     <header className="flex items-center justify-between border-b border-edge bg-panel px-4 py-2.5">
@@ -37,18 +38,13 @@ export default function Toolbar() {
 
         <select
           aria-label="Load preset"
-          defaultValue=""
+          value={currentPreset}
           onChange={(e) => {
-            if (e.target.value) {
-              loadPreset(e.target.value);
-              e.target.value = "";
-            }
+            if (e.target.value) loadPreset(e.target.value);
           }}
           className="cursor-pointer rounded border border-edge bg-panel2 px-3 py-1.5 text-xs text-neutral-200 outline-none transition-colors hover:border-accent focus:border-accent"
         >
-          <option value="" disabled>
-            Presets ▾
-          </option>
+          <option value="">Presets ▾</option>
           {PRESET_NAMES.map((name) => (
             <option key={name} value={name}>
               {name}

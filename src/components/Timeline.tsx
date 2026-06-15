@@ -24,19 +24,23 @@ function TrackRow({ track, totalBeats }: { track: Track; totalBeats: number }) {
         {track.events.map((ev, i) => {
           const widthBeats = ev.kind === "note" ? ev.duration : DRUM_WIDTH_BEATS;
           const left = (ev.time / totalBeats) * 100;
-          const width = Math.max(0.5, (widthBeats / totalBeats) * 100);
+          const width = Math.max(0.4, (widthBeats / totalBeats) * 100);
           const label = ev.kind === "note" ? ev.notes.join(" ") : ev.drum;
           return (
             <div
               key={i}
-              className="absolute top-1 bottom-1 rounded-sm opacity-85"
+              className="absolute top-1 bottom-1 rounded-[3px] border border-black/40 transition-opacity hover:opacity-100"
               style={{
                 left: `${left}%`,
-                width: `${width}%`,
+                // Subtract a couple of px so adjacent blocks have a visible gap.
+                width: `calc(${width}% - 2px)`,
+                minWidth: 2,
                 backgroundColor: track.color,
-                boxShadow: `0 0 6px ${track.color}55`,
+                backgroundImage:
+                  "linear-gradient(180deg, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0.06) 45%, rgba(0,0,0,0.22) 100%)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)",
               }}
-              title={`${label} @ beat ${ev.time.toFixed(2)}`}
+              title={`${label} · ${widthBeats} beat${widthBeats === 1 ? "" : "s"} @ ${ev.time.toFixed(2)}`}
             />
           );
         })}
@@ -84,7 +88,7 @@ export default function Timeline() {
           {Array.from({ length: barCount + 1 }).map((_, i) => (
             <div
               key={i}
-              className="absolute top-0 bottom-0 border-l border-edge/40"
+              className="absolute top-0 bottom-0 border-l border-edge/70"
               style={{ left: `${((i * beatsPerBar) / totalBeats) * 100}%` }}
             />
           ))}

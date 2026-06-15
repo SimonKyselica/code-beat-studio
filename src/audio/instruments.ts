@@ -130,38 +130,43 @@ export function createDrumKit(): DrumKit {
     envelope: { attack: 0.001, decay: 0.35, sustain: 0, release: 0.3 },
   }).connect(out);
 
+  // Snare: a high-passed white-noise burst plus a short tonal body.
   const snareNoise = new Tone.NoiseSynth({
     noise: { type: "white" },
     envelope: { attack: 0.001, decay: 0.2, sustain: 0 },
-  }).connect(out);
+  });
+  const snareFilter = new Tone.Filter(1200, "highpass");
+  snareNoise.chain(snareFilter, out);
 
   const snareBody = new Tone.Synth({
     oscillator: { type: "triangle" },
     envelope: { attack: 0.001, decay: 0.15, sustain: 0, release: 0.1 },
   }).connect(out);
 
+  // Clap: band-passed pink noise.
   const clap = new Tone.NoiseSynth({
     noise: { type: "pink" },
     envelope: { attack: 0.001, decay: 0.18, sustain: 0 },
-  }).connect(out);
+  });
+  const clapFilter = new Tone.Filter({ type: "bandpass", frequency: 1500, Q: 1.5 });
+  clap.chain(clapFilter, out);
 
-  const hihat = new Tone.MetalSynth({
-    envelope: { attack: 0.001, decay: 0.1, release: 0.02 },
-    harmonicity: 5.1,
-    modulationIndex: 32,
-    resonance: 4000,
-    octaves: 1.5,
-  }).connect(out);
-  hihat.frequency.value = 380;
+  // Hi-hat: very short, bright high-passed white noise. (MetalSynth is finicky
+  // and was silent; filtered noise is reliable and crisp.)
+  const hihat = new Tone.NoiseSynth({
+    noise: { type: "white" },
+    envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.02 },
+  });
+  const hihatFilter = new Tone.Filter(7000, "highpass");
+  hihat.chain(hihatFilter, out);
 
-  const cymbal = new Tone.MetalSynth({
-    envelope: { attack: 0.001, decay: 1.2, release: 0.3 },
-    harmonicity: 5.1,
-    modulationIndex: 40,
-    resonance: 6000,
-    octaves: 1.5,
-  }).connect(out);
-  cymbal.frequency.value = 280;
+  // Cymbal / crash: long high-passed white noise.
+  const cymbal = new Tone.NoiseSynth({
+    noise: { type: "white" },
+    envelope: { attack: 0.001, decay: 0.8, sustain: 0, release: 0.5 },
+  });
+  const cymbalFilter = new Tone.Filter(5000, "highpass");
+  cymbal.chain(cymbalFilter, out);
 
   const trigger: DrumKit["trigger"] = (drum, time, vel) => {
     switch (drum) {
@@ -173,13 +178,13 @@ export function createDrumKit(): DrumKit {
         break;
       case "snare":
         snareNoise.triggerAttackRelease("16n", time, vel);
-        snareBody.triggerAttackRelease("G3", "16n", time, vel * 0.6);
+        snareBody.triggerAttackRelease("G3", "16n", time, vel * 0.5);
         break;
       case "clap":
         clap.triggerAttackRelease("16n", time, vel);
         break;
       case "hihat":
-        hihat.triggerAttackRelease("32n", time, vel);
+        hihat.triggerAttackRelease("16n", time, vel);
         break;
       case "cymbal":
         cymbal.triggerAttackRelease("1n", time, vel);
@@ -194,10 +199,14 @@ export function createDrumKit(): DrumKit {
       kick.dispose();
       tom.dispose();
       snareNoise.dispose();
+      snareFilter.dispose();
       snareBody.dispose();
       clap.dispose();
+      clapFilter.dispose();
       hihat.dispose();
+      hihatFilter.dispose();
       cymbal.dispose();
+      cymbalFilter.dispose();
       out.dispose();
     },
   };

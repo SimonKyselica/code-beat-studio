@@ -80,6 +80,8 @@ interface StudioState {
   isExporting: boolean;
   positionSec: number;
   helpOpen: boolean;
+  /** Name of the preset currently loaded verbatim, or "" once edited. */
+  currentPreset: string;
 
   setCode: (code: string) => void;
   loadPreset: (name: string) => void;
@@ -109,15 +111,23 @@ export const useStudioStore = create<StudioState>((set, get) => ({
   isExporting: false,
   positionSec: 0,
   helpOpen: false,
+  currentPreset: "",
 
   setCode: (code) => {
     const { song, errors } = safeParse(code);
-    set((state) => ({
-      code,
-      // Keep the last good song so the timeline doesn't blank out mid-edit.
-      song: song ?? state.song,
-      errors,
-    }));
+    set((state) => {
+      // The dropdown keeps showing the preset only while the code matches it
+      // verbatim; once the user edits, it reverts to the "Presets" placeholder.
+      const stillPreset =
+        state.currentPreset !== "" && code === PRESETS[state.currentPreset];
+      return {
+        code,
+        // Keep the last good song so the timeline doesn't blank out mid-edit.
+        song: song ?? state.song,
+        errors,
+        currentPreset: stillPreset ? state.currentPreset : "",
+      };
+    });
   },
 
   loadPreset: (name) => {
@@ -125,7 +135,7 @@ export const useStudioStore = create<StudioState>((set, get) => ({
     if (!source) return;
     get().stop();
     const { song, errors } = safeParse(source);
-    set({ code: source, song, errors });
+    set({ code: source, song, errors, currentPreset: name });
   },
 
   play: async () => {
